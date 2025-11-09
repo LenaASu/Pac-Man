@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="stylesheet" href="style2.css">
+    
+    <title>Pac-Man Maze Grid</title>
+</head>
+<body>
+
+    <div class="header-container">
+        <h1 class="header-title">The Pac-Man Maze</h1>
+        <p class="header-subtitle">Rendered from a simple 2D array data structure.</p>
+    </div>
+
+    <!-- <div class="legend-card">
+        <h2 class="legend-title">Legend</h2>
+        <div class="legend-grid">
+            <div><span class="legend-symbol-wall"></span> Wall</div>
+            <div><span class="legend-symbol-wrapper"><div class="legend-dot pellet-dot"></div></span> Pellet</div>
+            <div><span class="legend-symbol-wrapper"><div class="legend-dot power-pellet-dot"></div></span> Power Pellet</div>
+            <div><span class="legend-symbol-wrapper legend-ghost-symbol">G</span> Ghost Cage</div>
+            <div><span class="legend-symbol-wrapper legend-pacman-symbol">P</span> Pac-Man Start</div>
+        </div>
+    </div> -->
+
+    <div class="game-area-container">
+
+        <div class="maze-card">
+            <div id="maze-grid">
+                </div>
+        </div>
+
+        <div class="scoreboard">
+            <h2 class="scoreboard-title">Scoreboard</h2>
+            <div class="score-item">
+                <span class="score-label">Score (分数)</span>
+                <span class="score-value" id="current-score">0</span>
+            </div>
+            <div class="score-item">
+                <span class="score-label">High Score</span>
+                <span class="score-value" id="high-score">25000</span>
+            </div>
+            <div class="score-item">
+                <span class="score-label">Lives (生命)</span>
+                <span class="score-value" id="lives">3</span>
+            </div>
+            <div class="score-item">
+                <span class="score-label">Level (关卡)</span>
+                <span class="score-value" id="level">1</span>
+            </div>
+        </div>
+
+    </div>
+    
+    <script src="script.js"></script>
+    
+</body>
+</html>
