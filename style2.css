@@ -31,6 +31,10 @@ body {
     margin: 0;
 }
 
+.border{
+    border-style:dotted solid;
+}
+
 /* Header Styling */
 .header-container {
     text-align: center;
@@ -228,7 +232,7 @@ body {
 
 /* --- PAC-MAN ROTATION STYLES (Set by JS) --- */
 
-.pacman-graphic.pacman-right {
+/* .pacman-graphic.pacman-right {
     transform: rotate(0deg); 
 }
 
@@ -238,11 +242,11 @@ body {
 
 .pacman-graphic.pacman-up {
     transform: rotate(-90deg); /* Or 270deg */
-}
+/* }
 
 .pacman-graphic.pacman-down {
     transform: rotate(90deg);
-}
+} */ 
 
 
 
@@ -296,6 +300,86 @@ body {
     border-top: 2px solid var(--color-red);
     height: 100%;
     width: 100%;
+}
+/* 1. Traveler */
+.traveler-graphic {
+    /* REMOVE: background-color: #ec4899; */
+    
+    /* ADD these three lines to use the image */
+    background-image: url('characters/traveler.png'); 
+    background-size: contain; 
+    background-repeat: no-repeat;
+    background-position: center;
+    
+    /* You may want to adjust the ghost-graphic to remove the border-radius for pixel art */
+    border-radius: 0; 
+}
+
+/* 2. Aino */
+.aino-graphic {
+    /* REMOVE: background-color: #ec4899; */
+    
+    /* ADD these three lines to use the image */
+    background-image: url('characters/Aino.png'); 
+    
+    background-size: contain; 
+    background-repeat: no-repeat;
+    background-position: center;
+    
+    /* You may want to adjust the ghost-graphic to remove the border-radius for pixel art */
+    border-radius: 0; 
+}
+
+/* 3. Flins */
+.flins-graphic {
+    /* REMOVE: background-color: #ec4899; */
+    
+    /* ADD these three lines to use the image */
+    background-image: url('characters/Flins.png'); 
+    background-size: contain; 
+    background-repeat: no-repeat;
+    background-position: center;
+    
+    /* You may want to adjust the ghost-graphic to remove the border-radius for pixel art */
+    border-radius: 0; 
+}
+
+/* 4. Albedo */
+.albedo-graphic {
+    /* REMOVE: background-color: #ec4899; */
+    
+    /* ADD these three lines to use the image */
+    background-image: url('characters/Albedo.png'); 
+    background-size: contain; 
+    background-repeat: no-repeat;
+    background-position: center;
+    
+    /* You may want to adjust the ghost-graphic to remove the border-radius for pixel art */
+    border-radius: 0; 
+}
+
+/* Also, update the common .ghost-graphic style to remove the border-radius for the ghost-graphic class */
+.ghost-graphic {
+    position: absolute;
+    transition: transform var(--game-speed) linear;
+    z-index: 5;
+    
+    /* allow JS to set exact pixel size */
+    width: auto;
+    height: auto;
+
+    border-radius: 0;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+
+/* 2. Aino - IMPORTANT FIX: Ensure you add the file extension */
+.aino-graphic {
+    /* ... other styles ... */
+    background-image: url('characters/Aino.png'); /* FIX: MUST include .png extension */
+    /* ... other styles ... */
 }
 
 @keyframes pulse {

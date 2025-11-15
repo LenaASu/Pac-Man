@@ -6,13 +6,17 @@
     
     <link rel="stylesheet" href="style2.css">
     
-    <title>Pac-Man Maze Grid</title>
+    <title>Rerir: Werewolf</title>
 </head>
 <body>
 
     <div class="header-container">
-        <h1 class="header-title">The Pac-Man Maze</h1>
-        <p class="header-subtitle">Rendered from a simple 2D array data structure.</p>
+        <h1 class="header-title">Rerir: Werewolf</h1>
+        <!-- <p class="header-subtitle">A generative maze chasing platform.</p> -->
+        <h3 > <div class="border">space</div> Double press: start the game. </br>Press during the game: stop/resume.</h3>
+       <p><strong>Up:</strong> I <space></space><strong>Down:</strong> K </p>
+
+       <p><strong>Left: </strong>J <strong>Right:</strong> L</p>
     </div>
 
     <!-- <div class="legend-card">
@@ -36,26 +40,77 @@
         <div class="scoreboard">
             <h2 class="scoreboard-title">Scoreboard</h2>
             <div class="score-item">
-                <span class="score-label">Score (分数)</span>
+                <span class="score-label">Score</span>
                 <span class="score-value" id="current-score">0</span>
             </div>
             <div class="score-item">
-                <span class="score-label">High Score</span>
-                <span class="score-value" id="high-score">25000</span>
+                <span class="score-label">Best Score</span>
+                <span class="score-value" id="high-score">2540</span>
             </div>
             <div class="score-item">
-                <span class="score-label">Lives (生命)</span>
-                <span class="score-value" id="lives">3</span>
+                <span class="score-label">Lives</span>
+                <span class="score-value" id="lives">1</span>
             </div>
             <div class="score-item">
-                <span class="score-label">Level (关卡)</span>
+                <span class="score-label">Level</span>
                 <span class="score-value" id="level">1</span>
+            </div>
+
+            <h2 class="scoreboard-title">Enemies</h2>
+            <div class="score-item"><img src="characters/traveler.png"/>Traveler  <img src="characters/Aino.png"/>Aino</div>
+            <div class="score-item"><img src="characters/Albedo.png"/>Albedo  <img src="characters/Flins.png"/>Flins</div>
+        
+
+            <h2 class="scoreboard-title">Skills</h2>
+            <div class="score-item">
+                <span class="score-label">Map Reshape (GA)</span>
+                <span class="score-value" id="current-score"></span>
+            </div>
+            <div class="score-item">
+                <span class="score-label">Map Reshape (SA)</span>
+                <span class="score-value" id="current-score"></span>
+            </div>
+            <div class="score-item">
+                <span class="score-label">Map Reshape (Hill)</span>
+                <span class="score-value" id="current-score"></span>
+            </div>
+            <div class="score-item">
+                <span class="score-label">Navigation (MCTS)</span>
+                <span class="score-value" id="high-score"></span>
+            </div>
+            <div class="score-item">
+                <span class="score-label">Navigation (A*)</span>
+                <span class="score-value" id="lives"></span>
+            </div>
+            <div class="score-item">
+                <span class="score-label">Navigation (DQN)</span>
+                <span class="score-value" id="level"></span>
             </div>
         </div>
 
+        <!-- <div class="scoreboard">
+            <h2 class="scoreboard-title">Scoreboard</h2>
+            <div class="score-item">
+                <span class="score-label">Score</span>
+                <span class="score-value" id="current-score">0</span>
+            </div>
+            <div class="score-item">
+                <span class="score-label">Best Score</span>
+                <span class="score-value" id="high-score">2540</span>
+            </div>
+            <div class="score-item">
+                <span class="score-label">Lives</span>
+                <span class="score-value" id="lives">1</span>
+            </div>
+            <div class="score-item">
+                <span class="score-label">Level</span>
+                <span class="score-value" id="level">1</span>
+            </div>
+        </div> -->
+
     </div>
     
-    <script src="script.js"></script>
+    <script src="script1.js"></script>
     
 </body>
 </html>

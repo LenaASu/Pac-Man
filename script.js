@@ -1,173 +1,232 @@
+// ======================================================
+//                 PAC-MAN GAME ENGINE
+//     Final Cleaned, Fully Fixed Version (2025)
+// ======================================================
+
 // Maze Data (0:Wall, 1:Path, 2:Pellet, 3:Power Pellet, 4:Ghost Cage, 5:Pac-Man Start)
 const PACMAN_MAZE = [
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0],
-    [0, 2, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 2, 0, 0, 2, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 2, 0],
-    [0, 3, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 2, 0, 0, 2, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 3, 0],
-    [0, 2, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 2, 0, 0, 2, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 2, 0],
-    [0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0],
-    [0, 2, 0, 0, 0, 0, 2, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 2, 0, 0, 0, 0, 2, 0],
-    [0, 2, 0, 0, 0, 0, 2, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 2, 0, 0, 0, 0, 2, 0],
-    [0, 2, 2, 2, 2, 2, 2, 0, 0, 2, 2, 2, 2, 0, 0, 2, 2, 2, 2, 0, 0, 2, 2, 2, 2, 2, 2, 0],
-    [0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 2, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 2, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 2, 0, 0, 1, 0, 0, 0, 4, 4, 0, 0, 0, 1, 0, 0, 2, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 2, 0, 0, 1, 0, 4, 4, 4, 4, 4, 4, 0, 1, 0, 0, 2, 0, 0, 0, 0, 0, 0],
-    [1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 0, 4, 4, 4, 4, 4, 4, 0, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1],
-    [0, 0, 0, 0, 0, 0, 2, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 2, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 2, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 2, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 2, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 2, 0, 0, 0, 0, 0, 0],
-    [0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0],
-    [0, 2, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 2, 0, 0, 2, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 2, 0],
-    [0, 2, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 2, 0, 0, 2, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 2, 0],
-    [0, 3, 2, 2, 0, 0, 2, 2, 2, 2, 2, 2, 2, 1, 1, 2, 2, 2, 2, 2, 2, 2, 0, 0, 2, 2, 3, 0],
-    [0, 0, 0, 2, 0, 0, 2, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 2, 0, 0, 2, 0, 0, 0],
-    [0, 0, 0, 2, 0, 0, 2, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 2, 0, 0, 2, 0, 0, 0],
-    [0, 2, 2, 2, 2, 2, 2, 0, 0, 2, 2, 2, 2, 0, 0, 2, 2, 2, 2, 0, 0, 2, 2, 2, 2, 2, 2, 0],
-    [0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0],
-    [0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0],
-    [0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 5, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,2,2,2,2,2,2,2,2,2,2,2,2,0,0,2,2,2,2,2,2,2,2,2,2,2,2,0],
+    [0,2,0,0,0,0,2,0,0,0,0,0,2,0,0,2,0,0,0,0,0,2,0,0,0,0,2,0],
+    [0,3,0,0,0,0,2,0,0,0,0,0,2,0,0,2,0,0,0,0,0,2,0,0,0,0,3,0],
+    [0,2,0,0,0,0,2,0,0,0,0,0,2,0,0,2,0,0,0,0,0,2,0,0,0,0,2,0],
+    [0,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,0],
+    [0,2,0,0,0,0,2,0,0,2,0,0,0,0,0,0,0,0,2,0,0,2,0,0,0,0,2,0],
+    [0,2,0,0,0,0,2,0,0,2,0,0,0,0,0,0,0,0,2,0,0,2,0,0,0,0,2,0],
+    [0,2,2,2,2,2,2,0,0,2,2,2,2,0,0,2,2,2,2,0,0,2,2,2,2,2,2,0],
+    [0,0,0,0,0,0,2,0,0,0,0,0,1,0,0,1,0,0,0,0,0,2,0,0,0,0,0,0],
+    [0,0,0,0,0,0,2,0,0,0,0,0,1,0,0,1,0,0,0,0,0,2,0,0,0,0,0,0],
+    [0,0,0,0,0,0,2,0,0,1,1,1,1,1,1,1,1,1,1,0,0,2,0,0,0,0,0,0],
+    [0,0,0,0,0,0,2,0,0,1,0,0,0,4,4,0,0,0,1,0,0,2,0,0,0,0,0,0],
+    [0,0,0,0,0,0,2,0,0,1,0,4,4,4,4,4,4,0,1,0,0,2,0,0,0,0,0,0],
+    [1,1,1,1,1,1,2,1,1,1,0,4,4,4,4,4,4,0,1,1,1,2,1,1,1,1,1,1],
+    [0,0,0,0,0,0,2,0,0,1,0,0,0,0,0,0,0,0,1,0,0,2,0,0,0,0,0,0],
+    [0,0,0,0,0,0,2,0,0,1,0,0,0,0,0,0,0,0,1,0,0,2,0,0,0,0,0,0],
+    [0,0,0,0,0,0,2,0,0,1,1,1,1,1,1,1,1,1,1,0,0,2,0,0,0,0,0,0],
+    [0,2,2,2,2,2,2,2,2,2,2,2,2,0,0,2,2,2,2,2,2,2,2,2,2,2,2,0],
+    [0,2,0,0,0,0,2,0,0,0,0,0,2,0,0,2,0,0,0,0,0,2,0,0,0,0,2,0],
+    [0,2,0,0,0,0,2,0,0,0,0,0,2,0,0,2,0,0,0,0,0,2,0,0,0,0,2,0],
+    [0,3,2,2,0,0,2,2,2,2,2,2,2,1,1,2,2,2,2,2,2,2,0,0,2,2,3,0],
+    [0,0,0,2,0,0,2,0,0,2,0,0,0,0,0,0,0,0,2,0,0,2,0,0,2,0,0,0],
+    [0,0,0,2,0,0,2,0,0,2,0,0,0,0,0,0,0,0,2,0,0,2,0,0,2,0,0,0],
+    [0,2,2,2,2,2,2,0,0,2,2,2,2,0,0,2,2,2,2,0,0,2,2,2,2,2,2,0],
+    [0,2,0,0,0,0,0,0,0,0,0,0,2,0,0,2,0,0,0,0,0,0,0,0,0,0,2,0],
+    [0,2,0,0,0,0,0,0,0,0,0,0,2,0,0,2,0,0,0,0,0,0,0,0,0,0,2,0],
+    [0,2,2,2,2,2,2,2,2,2,2,2,2,5,1,2,2,2,2,2,2,2,2,2,2,2,2,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
 ];
 
-// --- GAME CONSTANTS AND STATE ---
+// ======================================================
+//                 GHOST INITIAL POSITIONS
+// ======================================================
+
+const CHARACTERS = {
+    // Speed reduced to 0.9 and state initialized to "escape"
+    traveler: { r:14, c:13, direction:'up',  class:'traveler-graphic', element:null, speedMultiplier:0.9, tick:0, role:"blinky", state: "escape" },
+    albedo:   { r:14, c:14, direction:'up',  class:'albedo-graphic',   element:null, speedMultiplier:0.9, tick:0, role:"pinky",  state: "escape" },
+    aino:     { r:14, c:12, direction:'up',  class:'aino-graphic',     element:null, speedMultiplier:0.9, tick:0, role:"inky",   state: "escape" },
+    flins:    { r:14, c:15, direction:'up',  class:'flins-graphic',    element:null, speedMultiplier:0.9, tick:0, role:"clyde",  state: "escape" }
+};
+
+// ======================================================
+//                GLOBAL GAME VARIABLES
+// ======================================================
+
 const WALL = 0;
 const PATH = 1;
 const PELLET = 2;
 const POWER_PELLET = 3;
 const GHOST_CAGE = 4;
-const PACMAN_START = 5; 
+const PACMAN_START = 5;
 
-// Initial Pac-Man Position 
 let pacmanCurrentRow = 27;
 let pacmanCurrentCol = 13;
 
-// Game state variables
 let score = 0;
 let lives = 3;
-let isPaused = false; 
+let isPaused = false;
 
-// Direction tracking 
-let currentDirection = 'right'; 
-let nextDirection = 'right';    
+let currentDirection = 'right';
+let nextDirection = 'right';
 
-// --- Game Loop Variables ---
-let gameLoopInterval;           
-const GAME_SPEED = 150;         // Time in milliseconds per step (Pac-Man's actual speed)
-const GAME_SPEED_SECONDS = GAME_SPEED / 1000; // 0.15s for CSS transition
+let ghostsActivated = false;
 
-// --- Visual State Variables ---
-let pacmanGraphicElement = null; // Reference to the single <div> element for Pac-Man
-let cellSize = 0;               // Pixel size of a single cell (calculated on resize)
-const SWIPE_THRESHOLD = 50;     // Minimum pixels for a recognized swipe
-let touchStartX = 0;            // For mobile swipe detection
-let touchStartY = 0;            // For mobile swipe detection
+let gameLoopInterval = null;
+const GAME_SPEED = 150;
+const GAME_SPEED_SECONDS = GAME_SPEED / 1000;
 
-// --- HELPER FUNCTIONS ---
+let pacmanGraphicElement = null;
+let cellSize = 0;
 
-/**
- * Retrieves the DOM element for a specific cell in the maze grid.
- */
-function getGridCell(row, col) {
-    const mazeGrid = document.getElementById('maze-grid');
-    const columns = PACMAN_MAZE[0].length; 
-    const index = row * columns + col;
-    
-    if (index >= 0 && index < mazeGrid.children.length) {
-        return mazeGrid.children[index];
-    }
-    return null; 
+// ======================================================
+//                HELPER FUNCTIONS
+// ======================================================
+
+// Return DOM cell
+function getGridCell(r, c) {
+    const grid = document.getElementById("maze-grid");
+    const idx = r * PACMAN_MAZE[0].length + c;
+    return grid.children[idx] || null;
 }
 
-/**
- * The score and lives display in the scoreboard.
- */
 function updateScoreboard() {
-    document.getElementById('current-score').textContent = score;
-    document.getElementById('lives').textContent = lives;
+    document.getElementById("current-score").textContent = score;
+    document.getElementById("lives").textContent = lives;
 }
 
-/**
- * Calculates Pac-Man's pixel position and updates the CSS transform property 
- * for the smooth movement transition.
- */
+// ======================================================
+//       CREATE GHOST GRAPHICS + UPDATE POSITIONS
+// ======================================================
+
+function createCharacterGraphics() {
+    const grid = document.getElementById("maze-grid");
+    for (const name in CHARACTERS) {
+        const char = CHARACTERS[name];
+        const elem = document.createElement("div");
+        elem.classList.add("ghost-graphic", char.class);
+        grid.appendChild(elem);
+        char.element = elem;
+    }
+    updateCharacterVisualPositions();
+}
+
+function updateCharacterVisualPositions() {
+    if (cellSize === 0) return;
+    for (const name in CHARACTERS) {
+        const char = CHARACTERS[name];
+        const elem = char.element;
+        elem.style.setProperty('--game-speed', `${GAME_SPEED_SECONDS}s`);
+        // Use a small transition time if the ghost just left the cage to ensure smooth movement out of the gate
+        // This is a stylistic choice and can be adjusted
+        const transitionSpeed = (char.r <= 12 && char.state === "escape") ? `${GAME_SPEED_SECONDS/2}s` : `${GAME_SPEED_SECONDS}s`;
+        elem.style.transition = `transform ${transitionSpeed} linear`;
+        elem.style.transform = `translate(${char.c*cellSize}px, ${char.r*cellSize}px)`;
+    }
+}
+
+// ======================================================
+//                PAC-MAN VISUAL UPDATE
+// ======================================================
+
 function updatePacmanVisualPosition() {
     if (!pacmanGraphicElement || cellSize === 0) return;
 
-    // Calculate the pixel offset for the current row and column
-    const translateX = pacmanCurrentCol * cellSize;
-    const translateY = pacmanCurrentRow * cellSize;
-    
-    // Set the CSS variable for the transition duration
     pacmanGraphicElement.style.setProperty('--game-speed', `${GAME_SPEED_SECONDS}s`);
-    
-    // Apply the transformation for smooth movement
-    pacmanGraphicElement.style.transform = `translate(${translateX}px, ${translateY}px)`;
-    
-    // Update direction class for visual rotation
-    pacmanGraphicElement.classList.remove('pacman-up', 'pacman-down', 'pacman-left', 'pacman-right');
+    pacmanGraphicElement.style.transform =
+        `translate(${pacmanCurrentCol*cellSize}px, ${pacmanCurrentRow*cellSize}px)`;
+
+    pacmanGraphicElement.classList.remove("pacman-up","pacman-down","pacman-left","pacman-right");
     pacmanGraphicElement.classList.add(`pacman-${currentDirection}`);
 }
 
-/**
- * Checks if a move in a given direction is valid and returns the new coordinates.
- */
-function checkNextMove(direction) {
-    let nextR = pacmanCurrentRow;
-    let nextC = pacmanCurrentCol;
+// ======================================================
+//                MOVEMENT VALIDATION
+// ======================================================
+// CLEANED: Only validates move and returns potential next coordinates/warp status.
+function checkNextMove(direction, r=pacmanCurrentRow, c=pacmanCurrentCol, entity="player") {
+    let nr = r, nc = c;
     const maxCols = PACMAN_MAZE[0].length;
-    
-    // Calculate new position
-    switch (direction) {
-        case 'up': nextR -= 1; break;
-        case 'down': nextR += 1; break;
-        case 'left': nextC -= 1; break;
-        case 'right': nextC += 1; break;
+
+    switch(direction) {
+        case "up": nr--; break;
+        case "down": nr++; break;
+        case "left": nc--; break;
+        case "right": nc++; break;
     }
 
-    // Handle Tunnel Warping
-    if (nextR === 14) { // Row 14 is the tunnel row
-        if (nextC < 0) { // Moving off the left side
-            nextC = maxCols - 1; 
+    // --- WARP TUNNEL LOGIC: Calculates the post-warp coordinates ---
+    let didWarp = false;
+    if (nr === 14) {
+        if (nc < 0) {
+            nc = maxCols - 1;
+            didWarp = true;
         }
-        else if (nextC >= maxCols) { // Moving off the right side
-            nextC = 0; 
+        if (nc >= maxCols) {
+            nc = 0;
+            didWarp = true;
         }
     }
     
-    // Check array boundaries (Tunnel warping handles the horizontal edges for row 14)
-    if (nextR < 0 || nextR >= PACMAN_MAZE.length || (nextR !== 14 && (nextC < 0 || nextC >= maxCols)) ) {
-        return { valid: false, nextR: nextR, nextC: nextC };
+    // If the move resulted in a warp, it is always valid and should bypass all other checks
+    if (didWarp) {
+        return { valid:true, nextR:nr, nextC:nc, didWarp:true };
+    }
+
+    // --- STANDARD VALIDATION (after potential warp check) ---
+
+    // Out of bounds (non-warp)
+    if (nr < 0 || nr >= PACMAN_MAZE.length) return { valid:false, nextR:nr, nextC:nc };
+    if (nc < 0 || nc >= maxCols) return { valid:false, nextR:nr, nextC:nc };
+
+    const tile = PACMAN_MAZE[nr][nc];
+
+    // Walls always block
+    if (tile === WALL) return { valid:false, nextR:nr, nextC:nc };
+
+    // GHOST LOGIC: CAGE ENTRY/EXIT
+    if (entity === "ghost") {
+        const isCurrentGateTile = (r === 12 && (c === 13 || c === 14));
+        const isTargetGateTile = (nr === 12 && (nc === 13 || nc === 14));
+        const isStartingInCage = (PACMAN_MAZE[r][c] === GHOST_CAGE);
+        const isTargetInCage = (PACMAN_MAZE[nr][nc] === GHOST_CAGE);
+        
+        // 1. Ghosts can always move within the cage tiles
+        if (isStartingInCage && isTargetInCage) {
+             return { valid:true, nextR:nr, nextC:nc, didWarp:false };
+        }
+
+        // 2. Ghosts can move from the cage (r=13, r=14) to the gate tiles (r=12)
+        if (isStartingInCage && isTargetGateTile && direction === "up") {
+            return { valid:true, nextR:nr, nextC:nc, didWarp:false };
+        }
+
+        // 3. Ghosts can move from the gate tiles (r=12) out to the path (r=11)
+        if (isCurrentGateTile && direction === "up" && PACMAN_MAZE[nr][nc] === PATH) {
+            return { valid:true, nextR:nr, nextC:nc, didWarp:false };
+        }
+
+        // 4. They cannot move through walls, unless they are at the gate moving up (handled by 2/3)
+        if (PACMAN_MAZE[nr][nc] === WALL) return { valid:false, nextR:nr, nextC:nc, didWarp:false };
     }
     
-    const nextCellValue = PACMAN_MAZE[nextR][nextC];
-
-    // Check for wall collision
-    if (nextCellValue === WALL) {
-        return { valid: false, nextR: nextR, nextC: nextC };
-    }
-
-    return { valid: true, nextR: nextR, nextC: nextC };
+    // Fallthrough for Pacman and valid ghost moves outside cage/gate
+    return { valid:true, nextR:nr, nextC:nc, didWarp:false };
 }
 
-// --- GAME LOOP CONTROLS ---
+// ======================================================
+//                    GAME LOOP
+// ======================================================
 
-/**
- * Starts the continuous movement game loop.
- */
 function startGameLoop() {
-    if (gameLoopInterval) return; 
-
-    // The game loop calls movePacman every GAME_SPEED milliseconds
+    if (gameLoopInterval) return;
     gameLoopInterval = setInterval(() => {
-        movePacman();
-    }, GAME_SPEED); 
+        if (!isPaused) {
+            movePacman();
+            moveCharacters();
+        }
+    }, GAME_SPEED);
 }
 
-/**
- * Stops the game loop (e.g., when Pac-Man hits a wall or the game pauses).
- */
 function stopGameLoop() {
     if (gameLoopInterval) {
         clearInterval(gameLoopInterval);
@@ -175,323 +234,490 @@ function stopGameLoop() {
     }
 }
 
-/**
- * Toggles the game pause state.
- */
 function togglePause() {
-    if (isPaused) {
+    if (!gameLoopInterval) {
         isPaused = false;
         startGameLoop();
-        console.log("Game Resumed"); // Add visual cue here later
-    } else {
-        isPaused = true;
-        stopGameLoop();
-        console.log("Game Paused"); // Add visual cue here later
+        return;
+    }
+    isPaused = !isPaused;
+}
+
+// ======================================================
+//          GHOST BEHAVIOR: AI TARGETING
+// ======================================================
+
+function manhattan(r1,c1,r2,c2) {
+    return Math.abs(r1-r2)+Math.abs(c1-c2);
+}
+
+function getBlinkyTarget() {
+    return { r:pacmanCurrentRow, c:pacmanCurrentCol };
+}
+
+function getPinkyTarget() {
+    let r=pacmanCurrentRow, c=pacmanCurrentCol;
+    switch(currentDirection) {
+        case "up": r-=4; break;
+        case "down": r+=4; break;
+        case "left": c-=4; break;
+        case "right": c+=4; break;
+    }
+    return {r,c};
+}
+
+function getInkyTarget() {
+    const blinky = CHARACTERS.traveler;
+    let r=pacmanCurrentRow, c=pacmanCurrentCol;
+
+    switch(currentDirection) {
+        case "up": r-=2; break;
+        case "down": r+=2; break;
+        case "left": c-=2; break;
+        case "right": c+=2; break;
+    }
+
+    const vr = r - blinky.r;
+    const vc = c - blinky.c;
+
+    return { r: blinky.r + 2*vr, c: blinky.c + 2*vc };
+}
+
+function getClydeTarget(char) {
+    const dist = manhattan(char.r, char.c, pacmanCurrentRow, pacmanCurrentCol);
+    if (dist < 8) return { r: 27, c:0 }; // Scatter corner
+    return { r: pacmanCurrentRow, c: pacmanCurrentCol };
+}
+
+function hasLineOfSight(r1,c1,r2,c2) {
+    if (r1 === r2) {
+        const [minC,maxC]=[Math.min(c1,c2),Math.max(c1,c2)];
+        for (let c=minC+1;c<maxC;c++) if (PACMAN_MAZE[r1][c]===WALL) return false;
+        return true;
+    }
+    if (c1 === c2) {
+        const [minR,maxR]=[Math.min(r1,r2),Math.max(r1,r2)];
+        for (let r=minR+1;r<maxR;r++) if (PACMAN_MAZE[r][c1]===WALL) return false;
+        return true;
+    }
+    return false;
+}
+
+// CLEANED: Simplified no-U-turn logic to prevent oscillation.
+function getPossibleMoves(r,c,currentDir,entity="player") {
+    const dirs = ["up","down","left","right"];
+    const out = [];
+
+    for (const d of dirs) {
+        const m = checkNextMove(d,r,c,entity);
+        if (m.valid) {
+            // No U-turn logic
+            const reverse =
+                (d==="up" && currentDir==="down") ||
+                (d==="down" && currentDir==="up") ||
+                (d==="left" && currentDir==="right") ||
+                (d==="right" && currentDir==="left");
+
+            // Only allow moves that are NOT a direct reversal
+            if (!reverse) out.push({direction:d,r:m.nextR,c:m.nextC});
+        }
+    }
+    
+    // If we're trapped and the only non-reversing move is a reversal, allow it.
+    if (out.length === 0) {
+        // Find the reverse direction
+        let reverseDir = "";
+        if (currentDir === "up") reverseDir = "down";
+        else if (currentDir === "down") reverseDir = "up";
+        else if (currentDir === "left") reverseDir = "right";
+        else if (currentDir === "right") reverseDir = "left";
+        
+        const m = checkNextMove(reverseDir,r,c,entity);
+        if (m.valid) out.push({direction:reverseDir,r:m.nextR,c:m.nextC});
+    }
+
+    return out;
+}
+
+function chooseDirectionTowardsTarget(char,target) {
+    const moves = getPossibleMoves(char.r,char.c,char.direction,"ghost");
+    let best=null, bestDist=99999;
+
+    for (const m of moves) {
+        const dist = manhattan(m.r,m.c,target.r,target.c);
+        if (dist < bestDist) {
+            bestDist = dist;
+            best = m;
+        }
+    }
+
+    // If no best move is found, fall back to the first valid move
+    return best || moves[0];
+}
+
+// ======================================================
+//        MAIN GHOST MOVEMENT + ESCAPE LOGIC
+// ======================================================
+
+function moveCharacters() {
+    if (!ghostsActivated) return;
+
+    // Use this to determine if we need a standard visual update at the end
+    let didWarpOccur = false;
+
+    for (const name in CHARACTERS) {
+        const char = CHARACTERS[name];
+
+        // Apply speed multiplier
+        char.tick += char.speedMultiplier;
+        if (char.tick < 1) continue;
+        char.tick -= 1;
+
+        let mv = null; // Stores the chosen next move object
+        let nextMoveCheckResult = null;
+        let target = null;
+
+        // ================================
+        //       ESCAPE/CAGE LOGIC (NEW)
+        // ================================
+        
+        // Ghost is currently in the cage (r=13 or r=14, or at gate r=12)
+        const isInsideCageArea = (PACMAN_MAZE[char.r][char.c] === GHOST_CAGE || (char.r === 12 && (char.c === 13 || char.c === 14)));
+        
+        if (char.state === "escape" || isInsideCageArea) {
+            
+            let preferredDirection = "up";
+            
+            // If the ghost is inside the cage body (r=13 or r=14) and needs to move horizontally to align with the gate
+            if (char.r >= 13 && (char.c < 13 || char.c > 14)) {
+                
+                // Determine the target column based on the ghost's role for better pathing
+                const targetCol = (char.c < 13) ? 13 : 14; 
+                preferredDirection = (char.c < targetCol) ? "right" : "left";
+            }
+
+            // Attempt the preferred move (UP, or horizontal toward center)
+            nextMoveCheckResult = checkNextMove(preferredDirection, char.r, char.c, "ghost");
+            
+            if (nextMoveCheckResult.valid) {
+                mv = nextMoveCheckResult;
+                mv.direction = preferredDirection;
+            } else {
+                // If the preferred move is blocked (e.g., UP is blocked, or horizontal is blocked),
+                // try the opposite horizontal direction if applicable (only inside r=13/14)
+                if (char.r >= 13) {
+                     const oppositeDir = (preferredDirection === "right") ? "left" : "right";
+                     nextMoveCheckResult = checkNextMove(oppositeDir, char.r, char.c, "ghost");
+                     if (nextMoveCheckResult.valid) {
+                         mv = nextMoveCheckResult;
+                         mv.direction = oppositeDir;
+                     }
+                }
+            }
+
+
+            // If a move was successfully chosen during escape/cage, update position
+            if (mv && mv.valid) {
+                char.r = mv.nextR;
+                char.c = mv.nextC;
+                char.direction = mv.direction || char.direction;
+                
+                // If they've reached the path outside the cage (row 11 or higher), switch to chase
+                if (char.r < 12 && char.state === "escape") {
+                    char.state = "chase";
+                    // Fall through to chase logic to immediately pick a real target
+                } else {
+                    // Execute visual update and continue to next character
+                    if (mv.didWarp) {
+                         warpCharacter(char.element, char.r, char.c);
+                         didWarpOccur = true;
+                    }
+                    // This ghost has moved one step and is still in the escape process
+                    continue; 
+                }
+            }
+        }
+
+        // ================================
+        //       CHASE/SCATTER MODE
+        // ================================
+        
+        if (char.state === "chase" || char.state === "frightened") { 
+            // ... (rest of the chase/scatter/target logic remains the same)
+            // ... (Lines 438 to 476 remain the same)
+            
+            // Choose target based on role
+            if (char.role === "blinky")      target = getBlinkyTarget();
+            else if (char.role === "pinky")  target = getPinkyTarget();
+            else if (char.role === "inky")   target = getInkyTarget();
+            else if (char.role === "clyde")  target = getClydeTarget(char);
+
+            // Line-of-sight override
+            if (hasLineOfSight(char.r,char.c,pacmanCurrentRow,pacmanCurrentCol)) {
+                target = { r:pacmanCurrentRow, c:pacmanCurrentCol };
+            }
+
+            // Move one step toward target
+            const chosenMove = chooseDirectionTowardsTarget(char,target);
+            
+            if (chosenMove) {
+                // Check move validity/warp status before committing coordinates
+                nextMoveCheckResult = checkNextMove(chosenMove.direction, char.r, char.c, "ghost");
+                
+                char.r = nextMoveCheckResult.nextR;
+                char.c = nextMoveCheckResult.nextC;
+                char.direction = chosenMove.direction; // Direction comes from chosen move
+
+                mv = nextMoveCheckResult;
+                mv.direction = chosenMove.direction;
+            }
+        }
+
+        // ================================
+        //     FINAL POSITION UPDATE
+        // ================================
+
+        if (mv && mv.valid) {
+            if (mv.didWarp) {
+                warpCharacter(char.element, char.r, char.c);
+                didWarpOccur = true;
+            }
+        }
+    }
+
+    // Call standard visual update for all non-warping ghosts.
+    if (!didWarpOccur) {
+        updateCharacterVisualPositions();
     }
 }
 
+// =======================================================
+//                 UTILITY FUNCTION FOR WARP
+// =======================================================
+// CLEANED: Uses global cellSize.
+function warpCharacter(element, newR, newC) {
+    // 1. Disable the CSS transition
+    element.style.transition = 'none';
 
-// --- CORE GAME LOGIC: PAC-MAN MOVEMENT ---
+    // 2. Immediately update the visual position (teleport)
+    element.style.transform = `translate(${newC * cellSize}px, ${newR * cellSize}px)`;
 
-/**
- * The main movement function called by the game loop. 
- */
+    // 3. Force the browser to apply the style change before re-enabling transition
+    element.offsetHeight; 
+
+    // 4. Re-enable the CSS transition
+    element.style.transition = 'transform var(--game-speed) linear';
+}
+
+// ======================================================
+//                PAC-MAN MOVEMENT
+// ======================================================
+// CLEANED: Correctly handles position update and warp.
+
 function movePacman() {
-    // Check if paused
-    if (isPaused) return; 
-    
-    let directionToTry = currentDirection;
+    if (isPaused) return;
 
-    // 1. Check Pre-Turn: Attempt to move in the requested direction (nextDirection)
+    let dirTry = currentDirection;
+    let step = { valid: false };
+
+    // 1. Attempt turn
     if (nextDirection !== currentDirection) {
-        const { valid } = checkNextMove(nextDirection);
-
-        if (valid) {
-            directionToTry = nextDirection;
-            currentDirection = nextDirection; 
-        }
-    }
-    
-    // 2. Perform Movement Check in the determined direction
-    const { valid, nextR, nextC } = checkNextMove(directionToTry);
-
-    if (!valid) {
-        // If Pac-Man hits a wall, stop the game loop until a new, valid direction is given.
-        stopGameLoop(); 
-        return; 
-    }
-
-    // --- EXECUTE THE VALID MOVE ---
-
-    // a. Update Pac-Man's position variables
-    pacmanCurrentRow = nextR;
-    pacmanCurrentCol = nextC;
-    
-    // b. Handle Eating
-    const nextCellValue = PACMAN_MAZE[nextR][nextC];
-    if (nextCellValue === PELLET || nextCellValue === POWER_PELLET) {
-        
-        // Update the PACMAN_MAZE array
-        PACMAN_MAZE[nextR][nextC] = PATH;
-        
-        // Update score
-        score += (nextCellValue === PELLET) ? 10 : 50;
-
-        // Clear the pellet from the newly entered cell in the DOM
-        const newCell = getGridCell(pacmanCurrentRow, pacmanCurrentCol);
-        if (newCell) {
-            newCell.classList.remove('pellet', 'power-pellet'); 
+        step = checkNextMove(nextDirection);
+        if (step.valid) {
+            currentDirection = nextDirection;
+            dirTry = nextDirection;
         }
     }
 
-    // c. Update the visual position smoothly
-    updatePacmanVisualPosition(); 
+    // 2. Attempt movement with the final direction
+    step = checkNextMove(dirTry);
+    if (!step.valid) return;
 
-    // d. Update Scoreboard
+    // --- EXECUTE MOVE ---
+    
+    // Update coordinates to the new (potentially warped) position
+    pacmanCurrentRow = step.nextR;
+    pacmanCurrentCol = step.nextC;
+
+    // Activate ghosts on first move
+    if (!ghostsActivated) ghostsActivated = true;
+
+    // Eating
+    const tile = PACMAN_MAZE[pacmanCurrentRow][pacmanCurrentCol];
+    if (tile === PELLET || tile === POWER_PELLET) {
+        PACMAN_MAZE[pacmanCurrentRow][pacmanCurrentCol] = PATH;
+        score += (tile === PELLET) ? 10 : 50;
+
+        const cell = getGridCell(pacmanCurrentRow,pacmanCurrentCol);
+        // Ensure element exists before manipulating classes
+        if (cell) {
+             cell.classList.remove("pellet","power-pellet");
+        }
+    }
+
+    // VISUAL UPDATE (Warp or standard)
+    if (step.didWarp) {
+        warpCharacter(pacmanGraphicElement, pacmanCurrentRow, pacmanCurrentCol);
+    } else {
+        updatePacmanVisualPosition();
+    }
+    
     updateScoreboard();
 }
 
+// ======================================================
+//                KEYBOARD INPUT
+// ======================================================
 
-// --- INPUT CONTROLS ---
+function handleKeyDown(e) {
+    const key = e.key;
 
-/**
- * Handles keyboard input to set the next direction and start the game loop.
- */
-function handleKeyDown(event) {
-    let desiredDirection = null;
-    const key = event.key;
-    
-    // 1. Handle Pause/Resume (Spacebar)
-    if (key === ' ') {
-        event.preventDefault(); 
+    // Space = Pause
+    if (key === " ") {
+        e.preventDefault();
         togglePause();
-        return; // Stop processing any other input if we paused/resumed
-    }
-    
-    // Check if the key is a control key (IJKL or Arrow Keys)
-    const isControlKey = 
-        key === 'i' || key === 'I' || 
-        key === 'k' || key === 'K' || 
-        key === 'j' || key === 'J' || 
-        key === 'l' || key === 'L' ||
-        key === 'ArrowUp' || key === 'ArrowDown' || 
-        key === 'ArrowLeft' || key === 'ArrowRight';
-
-    if (isControlKey) {
-        // Stop browser default action (e.g., scrolling with arrow keys)
-        event.preventDefault(); 
-    }
-    
-    // If game is paused, ignore movement keys
-    if (isPaused) return; 
-    
-    // Assign direction only for the IJKL keys
-    switch (key) {
-        case 'i':
-        case 'I':
-            desiredDirection = 'up';
-            break;
-        case 'k':
-        case 'K':
-            desiredDirection = 'down';
-            break;
-        case 'j':
-        case 'J':
-            desiredDirection = 'left';
-            break;
-        case 'l':
-        case 'L':
-            desiredDirection = 'right';
-            break;
+        return;
     }
 
-    if (desiredDirection) {
-        nextDirection = desiredDirection; 
-        
-        // If the game is stopped (e.g., hit a wall), restart movement in the new direction
-        if (!gameLoopInterval) {
-            // Check if the new direction immediately results in a valid move
-            const { valid } = checkNextMove(desiredDirection);
-            if (valid) {
-                currentDirection = desiredDirection;
-                startGameLoop();
-            }
-        }
-    }
-}
-
-/**
- * Handles mobile swipe/tap input.
- */
-function handleTouchSwipe() {
-    const mazeGrid = document.getElementById('maze-grid');
-
-    // 1. Touch Start: Record initial position
-    mazeGrid.addEventListener('touchstart', (e) => {
-        e.preventDefault(); 
-        const touch = e.touches[0];
-        touchStartX = touch.clientX;
-        touchStartY = touch.clientY;
-    }, { passive: false }); 
-
-    // 2. Touch End: Calculate and process the swipe/tap
-    mazeGrid.addEventListener('touchend', (e) => {
-        const touch = e.changedTouches[0];
-        const touchEndX = touch.clientX;
-        const touchEndY = touch.clientY;
-
-        const diffX = touchEndX - touchStartX;
-        const diffY = touchEndY - touchStartY;
-
-        const distance = Math.sqrt(diffX * diffX + diffY * diffY);
-
-        if (distance < SWIPE_THRESHOLD) {
-            // IT'S A TAP - PAUSE/RESUME
-            togglePause();
-            return; 
-        } 
-        
-        // IT'S A SWIPE - MOVEMENT (only if not paused)
-        if (isPaused) return;
-        
-        let desiredDirection;
-
-        if (Math.abs(diffX) > Math.abs(diffY)) {
-            desiredDirection = (diffX > 0) ? 'right' : 'left';
-        } else {
-            desiredDirection = (diffY > 0) ? 'down' : 'up';
-        }
-        
-        nextDirection = desiredDirection; 
-
-        // If the game is stopped, restart movement in the new direction
-        if (!gameLoopInterval) {
-             const { valid } = checkNextMove(desiredDirection);
-            if (valid) {
-                currentDirection = desiredDirection;
-                startGameLoop();
-            }
-        }
-    });
-
-    // Optional: Prevent default scrolling behavior during touch move
-    mazeGrid.addEventListener('touchmove', (e) => {
-        e.preventDefault(); 
-    }, { passive: false }); 
-}
-
-
-// --- SCREEN RESIZING LOGIC (Mobile fix) ---
-function resizeMaze() {
-    const viewportWidth = window.innerWidth;
-    const viewportHeight = window.innerHeight;
-    const mazeCard = document.querySelector('.maze-card');
-    const header = document.querySelector('.header-container');
-    const scoreboard = document.querySelector('.scoreboard');
-    const mazeGrid = document.getElementById('maze-grid');
-
-    // PC/Medium Screen Logic (Width > 600px)
-    if (viewportWidth > 600) { 
-        mazeCard.style.maxWidth = ''; 
-        mazeCard.style.width = '';
-    } else {
-         // --- Small/Mobile Screen Scaling Logic (Width <= 600px) ---
-        const headerHeight = header ? header.offsetHeight : 0; 
-        const scoreboardHeight = scoreboard ? scoreboard.offsetHeight : 0;
-        
-        const bodyComputedStyle = window.getComputedStyle(document.body);
-        const bodyPaddingTop = parseFloat(bodyComputedStyle.paddingTop) || 0;
-        const bodyPaddingBottom = parseFloat(bodyComputedStyle.paddingBottom) || 0;
-        const bodyGap = parseFloat(bodyComputedStyle.gap) || 0; 
-        
-        const gameAreaContainer = document.querySelector('.game-area-container');
-        const gameAreaComputedStyle = window.getComputedStyle(gameAreaContainer);
-        const gameAreaGap = parseFloat(gameAreaComputedStyle.gap) || 0; 
-        
-        const consumedVerticalSpace = 
-            bodyPaddingTop + 
-            headerHeight + 
-            bodyGap + 
-            gameAreaGap + 
-            scoreboardHeight + 
-            bodyPaddingBottom;
-
-        const availableMazeHeight = viewportHeight - consumedVerticalSpace;
-        
-        const mazeAspect = 28 / 29;
-        const max_width_constraint = viewportWidth * 0.95; 
-        const max_height_constraint = availableMazeHeight * mazeAspect;
-
-        const finalMazeSize = Math.min(max_width_constraint, max_height_constraint);
-
-        mazeCard.style.maxWidth = `${finalMazeSize}px`;
-        mazeCard.style.width = `${finalMazeSize}px`; 
-    }
-    
-    // --- Calculate and store the cell size (in pixels) for visual movement ---
-    if (mazeGrid.offsetWidth > 0) {
-        cellSize = mazeGrid.offsetWidth / PACMAN_MAZE[0].length;
-        
-        // Also update the size of the Pac-Man graphic element
-        if (pacmanGraphicElement) {
-            pacmanGraphicElement.style.width = `${cellSize}px`;
-            pacmanGraphicElement.style.height = `${cellSize}px`;
-        }
-    }
-    
-    // Snap Pac-Man to the correct position after resizing (no visible movement)
-    updatePacmanVisualPosition(); 
-}
-
-
-// --- INITIALIZATION ---
-
-document.addEventListener('DOMContentLoaded', () => {
-    // --- MAZE DRAWING LOGIC ---
-    const mazeGrid = document.getElementById('maze-grid');
-
-    const cellClasses = {
-        0: 'wall', 1: 'path', 2: 'pellet', 3: 'power-pellet', 4: 'ghost-cage'
-        // PACMAN_START (5) is now treated as a regular PATH (1) in the grid background
+    // Movement keys
+    const dirs = {
+        "i":"up","I":"up",
+        "k":"down","K":"down",
+        "j":"left","J":"left",
+        "l":"right","L":"right"
     };
 
-    PACMAN_MAZE.forEach((row, rowIndex) => {
-        row.forEach((cellValue, colIndex) => {
-            const cell = document.createElement('div');
-            
-            // Map the cell value to a class (treat 5 as 1 for drawing purposes)
-            const className = cellClasses[cellValue === PACMAN_START ? PATH : cellValue];
-            cell.classList.add('cell', className);
+    if (dirs[key]) e.preventDefault();
+    if (isPaused) return;
 
-            if (rowIndex === 11 && (colIndex === 13 || colIndex === 14)) {
-                cell.classList.remove('ghost-cage', 'path', 'pellet', 'power-pellet'); 
-                cell.classList.add('path', 'ghost-gate');
+    if (dirs[key]) {
+        nextDirection = dirs[key];
+
+        if (!gameLoopInterval) {
+            const { valid } = checkNextMove(nextDirection);
+            if (valid) {
+                currentDirection = nextDirection;
+                startGameLoop();
             }
-            
-            mazeGrid.appendChild(cell);
-        });
-    });
-    // --- END MAZE DRAWING LOGIC ---
+        }
+    }
+}
 
-    // --- NEW: CREATE PAC-MAN GRAPHIC ELEMENT (Only once) ---
-    pacmanGraphicElement = document.createElement('div');
-    pacmanGraphicElement.classList.add('pacman-graphic');
-    pacmanGraphicElement.classList.add(`pacman-${currentDirection}`);
-    mazeGrid.appendChild(pacmanGraphicElement);
-    
-    // Set up Input Handlers
-    document.addEventListener('keydown', handleKeyDown);
-    handleTouchSwipe(); 
+// ======================================================
+//                TOUCH INPUT
+// ======================================================
 
-    // Call initialization functions
-    resizeMaze(); 
+let touchStartX = 0, touchStartY = 0;
+const SWIPE_THRESHOLD = 50;
+
+function handleTouchSwipe() {
+    const grid = document.getElementById("maze-grid");
+
+    grid.addEventListener("touchstart", e => {
+        e.preventDefault();
+        const t = e.touches[0];
+        touchStartX = t.clientX;
+        touchStartY = t.clientY;
+    }, { passive:false });
+
+    grid.addEventListener("touchend", e => {
+        const t = e.changedTouches[0];
+        const dx = t.clientX - touchStartX;
+        const dy = t.clientY - touchStartY;
+
+        const dist = Math.sqrt(dx*dx + dy*dy);
+
+        if (dist < SWIPE_THRESHOLD) {
+            togglePause();
+            return;
+        }
+
+        if (isPaused) return;
+
+        let dir = null;
+        if (Math.abs(dx) > Math.abs(dy)) dir = dx > 0 ? "right" : "left";
+        else dir = dy > 0 ? "down" : "up";
+
+        nextDirection = dir;
+
+        if (!gameLoopInterval) {
+            const {valid} = checkNextMove(dir);
+            if (valid) {
+                currentDirection = dir;
+                startGameLoop();
+            }
+        }
+    }, { passive:false });
+
+    grid.addEventListener("touchmove", e => e.preventDefault(), { passive:false });
+}
+
+// ======================================================
+//               SCREEN RESIZING
+// ======================================================
+
+function resizeMaze() {
+    const grid = document.getElementById("maze-grid");
+    if (grid.offsetWidth > 0) {
+        cellSize = grid.offsetWidth / PACMAN_MAZE[0].length;
+        pacmanGraphicElement.style.width = `${cellSize}px`;
+        pacmanGraphicElement.style.height = `${cellSize}px`;
+
+        for (const n in CHARACTERS) {
+            const el = CHARACTERS[n].element;
+            el.style.width = `${cellSize}px`;
+            el.style.height = `${cellSize}px`;
+        }
+    }
+
+    updatePacmanVisualPosition();
+    updateCharacterVisualPositions();
+}
+
+// ======================================================
+//                INITIALIZATION
+// ======================================================
+
+document.addEventListener("DOMContentLoaded", () => {
+    const grid = document.getElementById("maze-grid");
+
+    PACMAN_MAZE.forEach((row,r) => row.forEach((val,c) => {
+        const cell = document.createElement("div");
+        const type = val === PACMAN_START ? PATH : val;
+
+        const mapping = {
+            0:"wall",
+            1:"path",
+            2:"pellet",
+            3:"power-pellet",
+            4:"ghost-cage"
+        };
+
+        cell.classList.add("cell",mapping[type]);
+
+        // Gate tile
+        if (r === 12 && (c === 13 || c === 14)) {
+            cell.classList.add("ghost-gate");
+        }
+
+        grid.appendChild(cell);
+    }));
+
+    // Create Pac-Man
+    pacmanGraphicElement = document.createElement("div");
+    pacmanGraphicElement.classList.add("pacman-graphic","pacman-right");
+    grid.appendChild(pacmanGraphicElement);
+
+    // Create ghosts
+    createCharacterGraphics();
+
+    // Input handlers
+    document.addEventListener("keydown", handleKeyDown);
+    handleTouchSwipe();
+
+    resizeMaze();
     updateScoreboard();
-    
-    // NOTE: The game is paused/started by user input (IJKL/Swipe) or the Spacebar/Tap.
 });
 
-// Run on window resize events (for responsiveness)
-window.addEventListener('resize', resizeMaze);
-
-// Run on a timer for a quick initial sizing when browser elements might be loading
+window.addEventListener("resize", resizeMaze);
 setTimeout(resizeMaze, 300);
