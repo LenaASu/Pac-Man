@@ -87,7 +87,7 @@ let nextDirection = 'right';
 let ghostsActivated = false;
 
 let gameLoopInterval = null;
-const GAME_SPEED = 150;
+const GAME_SPEED = 200;
 const GAME_SPEED_SECONDS = GAME_SPEED / 1000;
 
 let pacmanGraphicElement = null;
